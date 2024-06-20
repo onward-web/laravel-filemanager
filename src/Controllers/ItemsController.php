@@ -7,6 +7,9 @@ use UniSharp\LaravelFilemanager\Events\FileIsMoving;
 use UniSharp\LaravelFilemanager\Events\FileWasMoving;
 use UniSharp\LaravelFilemanager\Events\FolderIsMoving;
 use UniSharp\LaravelFilemanager\Events\FolderWasMoving;
+use Illuminate\Http\Request;
+use Illuminate\Support\Arr;
+use UniSharp\LaravelFilemanager\LfmItem;
 
 class ItemsController extends LfmController
 {
@@ -15,13 +18,31 @@ class ItemsController extends LfmController
      *
      * @return mixed
      */
-    public function getItems()
+    public function getItems(Request $request)
     {
         $currentPage = self::getCurrentPageFromRequest();
 
         $perPage = $this->helper->getPaginationPerPage();
         $items = array_merge($this->lfm->folders(), $this->lfm->files());
 
+        $keyword =  $request->input('keyword');
+        $keywordValid = !empty($keyword) && is_scalar($keyword) ? true : false;
+
+        if($keywordValid){
+            $items = Arr::where($items, function (LfmItem $item) use($keyword) {
+                // папки не фильтурем
+                if($item->isDirectory()){
+                    return true;
+                }
+
+                if(mb_stripos($item->name, $keyword) !== false){
+                    return true;
+                }
+                return false;
+
+            });
+        }
+        
         return [
             'items' => array_map(function ($item) {
                 return $item->fill()->attributes;
