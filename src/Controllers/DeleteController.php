@@ -32,7 +32,7 @@ class DeleteController extends LfmController
                 event(new ImageIsDeleting($file->path('absolute')));
             }
 
-            if (!Storage::disk($this->helper->config('disk'))->exists($file->path('storage'))) {
+            if (!Storage::disk($this->helper->getDisk())->exists($file->path('storage'))) {
                 abort(404);
             }
 

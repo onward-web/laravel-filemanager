@@ -19,7 +19,7 @@ class RenameController extends LfmController
 
         $file = $this->lfm->setName($old_name);
 
-        if (!Storage::disk($this->helper->config('disk'))->exists($file->path('storage'))) {
+        if (!Storage::disk($this->helper->getDisk())->exists($file->path('storage'))) {
             abort(404);
         }
 

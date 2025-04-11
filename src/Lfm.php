@@ -38,6 +38,16 @@ class Lfm
         return $this->config->get('lfm.' . $key);
     }
 
+    public function getDisk(){
+        $type = $this->currentLfmType();
+        $diskFromType = $this->config->get('lfm.folder_categories.' . $type . '.disk');
+        if($diskFromType){
+            return $diskFromType;
+        }
+
+        return $this->config->get('lfm.disk');
+    }
+
     /**
      * Get only the file name.
      *

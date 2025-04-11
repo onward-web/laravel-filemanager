@@ -13,7 +13,7 @@ class LfmStorageRepository
     public function __construct($storage_path, $helper)
     {
         $this->helper = $helper;
-        $this->disk = Storage::disk($this->helper->config('disk'));
+        $this->disk = Storage::disk($this->helper->getDisk());
         $this->path = $storage_path;
     }
 
